@@ -27,7 +27,12 @@ def build_ptypes():
     ptypelist = get_ptypelist()
     d = [(pt['id'], pt['name']) for pt in ptypelist]
     result = get_ptypes_df(d)
-    return result
+    return [
+        {
+            'name': 'ptypes',
+            'value': result,
+        },
+    ]
 
 
 def build_pokemons():
@@ -80,7 +85,24 @@ def build_pokemons():
         ]
         for o in valid_pokemonlist
     ])))
-    return pokemons_result, pokemons_ptypes_result, pokemons_wazas_result, pokemons_spwazas_result
+    return [
+        {
+            'name': 'pokemons',
+            'value': pokemons_result,
+        },
+        {
+            'name': 'pokemons_ptypes',
+            'value': pokemons_ptypes_result,
+        },
+        {
+            'name': 'pokemons_wazas',
+            'value': pokemons_wazas_result,
+        },
+        {
+            'name': 'pokemons_spwazas',
+            'value': pokemons_spwazas_result,
+        },
+    ]
 
 
 def build_wazas():
@@ -88,12 +110,25 @@ def build_wazas():
     spwazaid_list = get_wazaid_list('special')
     waza_list = []
     spwaza_list = []
+
+    IGNORE_WAZAID_LIST = [
+        588, # はねる
+        1522, # へんしん
+    ]
+
+    IGNORE_SPWAZAID_LIST = [
+        4926, # ギガドレイン
+    ]
     
-    for idx, wid in enumerate(wazaid_list[:10]):
+    for idx, wid in enumerate(wazaid_list):
+        if wid in IGNORE_WAZAID_LIST:
+            continue
         waza_list.append(get_waza_by_id(wid))
         time.sleep(1)
     
-    for idx, wid in enumerate(spwazaid_list[:10]):
+    for idx, wid in enumerate(spwazaid_list):
+        if wid in IGNORE_SPWAZAID_LIST:
+            continue
         spwaza_list.append(get_spwaza_by_id(wid))
         time.sleep(1)
     
@@ -141,6 +176,29 @@ def build_wazas():
         for o in spwaza_list
     ])
 
-    return (wazas_result, spwazas_result,
-        wazas_trainer_result, wazas_gymraid_result,
-        spwazas_trainer_result, spwazas_gymraid_result)
+    return [
+        {
+            'name': 'wazas',
+            'value': wazas_result,
+        },
+        {
+            'name': 'spwazas',
+            'value': spwazas_result,
+        },
+        {
+            'name': 'wazas_trainer',
+            'value': wazas_trainer_result,
+        },
+        {
+            'name': 'wazas_gymraid',
+            'value': wazas_gymraid_result,
+        },
+        {
+            'name': 'spwazas_trainer',
+            'value': spwazas_trainer_result,
+        },
+        {
+            'name': 'spwazas_gymraid',
+            'value': spwazas_gymraid_result,
+        },
+    ]
